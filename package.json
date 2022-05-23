@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc -p .",
     "start": "yarn build && node .",
-    "test": "yarn build && node ./dist/_test/getUser.js"
+    "test": "yarn build && node ./dist/_test/test.js"
   },
   "author": "roogue",
   "license": "MIT",
