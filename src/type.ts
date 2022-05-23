@@ -119,11 +119,66 @@ export interface OsuWeb {
   unranked_beatmapset_count: number;
 }
 
-export interface User {
+export interface OsuUserType {
+  id: number;
+  osuweb: OsuWeb;
+}
+
+export interface UserType {
   loggedIn: boolean;
-  user: {
-    id: number;
-    osuweb: OsuWeb;
-  };
+  user: OsuUserType | null;
   paidFeaturesAccess: boolean;
 }
+
+export interface IdUserType {
+  favourites: number[];
+  id: number;
+  osuweb: OsuWeb;
+}
+
+export interface MetadataType {
+  userCount: number;
+  highestSearchedBeatmapID: number;
+  totalCollections: number;
+  highestCollectionId: number;
+}
+
+export interface BeatMap {
+  checksum: string;
+  id: number;
+}
+export interface BeatMapSet {
+  beatmaps: BeatMap[];
+  id: number;
+}
+
+export interface CollectionType {
+  uploader: {
+    rank: number;
+    username: string;
+    id: number;
+  };
+  favourites: number;
+  dateUploaded: {
+    _seconds: number;
+    _nanoseconds: number;
+  };
+  name: string;
+  bpmSpread: Record<string, number>;
+  difficultySpread: Record<string, number>;
+  description: string;
+  beatmapsets: BeatMapSet[];
+  beatmapCount: number;
+  id: number;
+  dateLastModified: {
+    _seconds: number;
+    _nanoseconds: number;
+  };
+  unsubmittedBeatmapCount: number;
+  // ! More Info needed
+  unknownChecksums: [];
+  // ! Modes can be typed
+  modes: Record<string, number>;
+}
+
+export type UploadType = CollectionType[];
