@@ -1,3 +1,5 @@
+export type UserRoute = "uploads" | "favourites";
+
 export class Routes {
   static readonly #baseUrl = "https://osucollector.com/api/";
 
@@ -5,11 +7,15 @@ export class Routes {
     return this.#baseUrl;
   }
 
-  static get users() {
-    return "users/";
+  static getUser(id: number, option: { route?: UserRoute } = {}) {
+    return `users/${id}/${option.route ?? ""}`;
   }
 
   static get me() {
     return "users/me";
+  }
+
+  static get metadata() {
+    return "metadata/";
   }
 }
