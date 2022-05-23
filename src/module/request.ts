@@ -1,4 +1,4 @@
-import axios, { Method } from "axios";
+import axios, { AxiosResponse, Method } from "axios";
 import { Routes } from "./Routes";
 
 export const request = async (
@@ -8,7 +8,7 @@ export const request = async (
     data?: any;
     cookie?: string;
   } = {}
-): Promise<any> => {
+): Promise<AxiosResponse> => {
   let body, query;
   const { data, cookie = "" } = options;
   method.toLocaleLowerCase() === "get" ? (query = data) : (body = data);
@@ -23,5 +23,5 @@ export const request = async (
     },
   });
 
-  return res.data as any;
+  return res;
 };
