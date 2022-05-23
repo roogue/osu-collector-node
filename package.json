@@ -1,0 +1,17 @@
+{
+  "name": "osu-collector-node",
+  "version": "1.0.0",
+  "description": "An osu!Collector api wrapper",
+  "main": "./dist/index.js",
+  "repository": "https://github.com/roogue/osu-collector-node.git",
+  "scripts": {
+    "build": "tsc -p .",
+    "start": "yarn build && node .",
+    "test": "yarn build && node ./dist/_test/getUser.js"
+  },
+  "author": "roogue",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.27.2"
+  }
+}
