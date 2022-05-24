@@ -2,5 +2,8 @@ import { OsuCollectorNode } from "../structure";
 
 const cookie = "";
 
-new OsuCollectorNode()
-  .getUserUploads(13198242).then(console.log)
+(async () => {
+  console.log(
+    (await new OsuCollectorNode().getCollection(400))?.modes.osu
+  );
+})();
