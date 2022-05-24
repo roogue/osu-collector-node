@@ -7,6 +7,10 @@ export class Routes {
     return this.#baseUrl;
   }
 
+  static get userList() {
+    return "users/";
+  }
+
   static getUser(id: number, option: { route?: UserRoute } = {}) {
     return `users/${id}/${option.route ?? ""}`;
   }
@@ -17,5 +21,9 @@ export class Routes {
 
   static get metadata() {
     return "metadata/";
+  }
+
+  static getCollection(id: number) {
+    return `collections/${id}`;
   }
 }
