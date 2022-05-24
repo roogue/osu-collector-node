@@ -6,12 +6,14 @@
         "beatmapsets",
         "colour",
         "favourite",
+        "favourited",
         "favourites",
         "kudosu",
         "osuweb",
         "playcounts",
         "playmode",
         "playstyle",
+        "taiko",
         "unranked",
         "unsubmitted"
     ]
