@@ -1,13 +1,14 @@
 import {
-  UserType,
   MetadataType,
-  UploadType,
-  FavouriteType,
-  Users,
   Me,
-  CollectionType,
-} from "../type";
-import { Routes, request } from "../module/index";
+  CollectionRoute,
+  UserRoute,
+  GetUserOptionsType,
+  GetCollectionOptionsType,
+  TimeRange,
+} from "../typings";
+import { Routes } from "./Routes";
+import axios, { AxiosError, AxiosResponse, Method } from "axios";
 
 export class OsuCollectorNode {
   cookie: string | null = null;
@@ -30,55 +31,29 @@ export class OsuCollectorNode {
   async getUserMe(): Promise<Me | null> {
     if (!this.cookie) throw new Error("Cookie is not set");
     const path = Routes.me;
-    const res = await request("get", path, { cookie: this.cookie });
+    const res = await this.request("get", path, { cookie: this.cookie });
     return res.status === 200 ? (res.data as Me) : null;
   }
 
   /**
    * Get user's data with id
    * @function getUser
-   * @param id User's Id
-   * @returns {Promise<UserType | null>}
+   * @param {GetUserOptionsType} options Options for different type of data to be fetched
+   * @returns {Promise<UserType | null>} User list or User data
    */
-  async getUser(id: number): Promise<UserType | null> {
-    const path = Routes.getUser(id);
-    const res = await request("get", path);
-    return res.status === 200 ? (res.data as UserType) : null;
-  }
-
-  /**
-   * Get user's uploads
-   * @function getUserUploads
-   * @param id User's Id
-   * @returns {Promise<UploadType | null>}
-   */
-  async getUserUploads(id: number): Promise<UploadType | null> {
-    const path = Routes.getUser(id, { route: "uploads" });
-    const res = await request("get", path);
-    return res.status === 200 ? (res.data as UploadType) : null;
-  }
-
-  /**
-   * Get user's favourite collections
-   * @function getUserFavourite
-   * @param id User's Id
-   * @returns {Promise<FavouriteType | null>}
-   */
-  async getUserFavourites(id: number): Promise<FavouriteType | null> {
-    const path = Routes.getUser(id, { route: "favourites" });
-    const res = await request("get", path);
-    return res.status === 200 ? (res.data as FavouriteType) : null;
-  }
-
-  /**
-   * Get users list
-   * @function getUserList
-   * @returns {Promise<Users | null>}
-   */
-  async getUserList(): Promise<Users | null> {
-    const path = Routes.userList;
-    const res = await request("get", path);
-    return res.status === 200 ? (res.data as Users) : null;
+  async getUser<K extends keyof UserRoute>(
+    options?: GetUserOptionsType
+  ): Promise<UserRoute[K] | null> {
+    const { id, params, route } = { ...options } as GetUserOptionsType;
+    const { page = 1, perPage = 50, cursor = 1 } = { ...params };
+    const path = id ? Routes.getUser(id, { route }) : Routes.userList;
+    const data = {
+      page: page.toString(),
+      perPage: perPage.toString(),
+      cursor: cursor.toString(),
+    };
+    const res = await this.request("get", path, { data });
+    return res.status === 200 ? (res.data as UserRoute[K]) : null;
   }
 
   /**
@@ -86,21 +61,75 @@ export class OsuCollectorNode {
    * @function getMetadata
    * @returns {Promise<MetadataType | null>}
    */
-  async getMetaData(): Promise<MetadataType | null> {
+  async getMetadata(): Promise<MetadataType | null> {
     const path = Routes.metadata;
-    const res = await request("get", path);
+    const res = await this.request("get", path);
     return res.status === 200 ? (res.data as MetadataType) : null;
   }
 
   /**
    * Get collection's data with id
    * @function getCollection
-   * @param id Collection's id
+   * @param {GetCollectionOptionsType} options Options for different type of data to be fetched
    * @returns {Promise<CollectionType | null>}
    */
-  async getCollection(id: number): Promise<CollectionType | null> {
-    const path = Routes.getCollection(id);
-    const res = await request("get", path);
-    return res.status === 200 ? (res.data as CollectionType) : null;
+  async getCollection<K extends keyof CollectionRoute>(
+    options?: GetCollectionOptionsType
+  ): Promise<CollectionRoute[K] | null> {
+    const { id, route, params } = { ...options } as GetCollectionOptionsType;
+    if (!id && !route) throw new Error("An Id or a Route is required");
+
+    const {
+      page = 1,
+      perPage = 50,
+      cursor = 1,
+      range = TimeRange.alltime,
+    } = { ...params };
+
+    const path = Routes.getCollection({ id, route });
+
+    const data = {
+      page: page.toString(),
+      perPage: perPage.toString(),
+      cursor: cursor.toString(),
+      range: range.toString(),
+    };
+
+    const res = await this.request("get", path, { data });
+    return res.status === 200 ? (res.data as CollectionRoute[K]) : null;
+  }
+
+  /**
+   * Use axios to make request
+   * @param {Method} method HTTP method
+   * @param {Routes} path Path
+   * @param options Data to be sent
+   * @returns
+   */
+  private async request(
+    method: Method,
+    path: Routes,
+    options: {
+      data?: Record<string, string>;
+      cookie?: string;
+    } = {}
+  ): Promise<AxiosResponse> {
+    let body, query;
+    const { data, cookie = "" } = options;
+    method.toLocaleLowerCase() === "get" ? (query = data) : (body = data);
+
+    const res = await axios({
+      method,
+      url: `${Routes.apiBaseUrl}${path}`,
+      data: body,
+      params: query,
+      headers: {
+        Cookie: cookie,
+      },
+    }).catch((err) => err);
+
+    if (res instanceof AxiosError) throw new Error(res.message);
+
+    return res as AxiosResponse;
   }
 }
