@@ -1,6 +1,6 @@
 # Osu-Collector-Node
 
-Osu-Collector-Node is a wrapper for osu!Collector API which written in typescript.
+Osu-Collector-Node is a wrapper for osu!Collector API which is written in typescript.
 
 ## Installation
 
@@ -31,9 +31,9 @@ const metadata = osuCollector.getMetadata().then(console.log).catch(console.erro
 For more information, check the [documentation](https://roogue.github.io/osu-collector-node/)
 
 ## Contributing
-Pull requests are welcomed, it can be missing of api endpoint or enhancement of typings.
 
-If bugs or issues were found, feel free to create an issue too for improvement of this package.
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks again!
 
 ## License
 [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
