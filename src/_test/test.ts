@@ -1,9 +1,11 @@
-import { OsuCollectorNode } from "../structure";
+import { OsuCollectorNode } from "../index";
 
 const cookie = "";
 
 (async () => {
   console.log(
-    (await new OsuCollectorNode().getCollection(400))?.modes.osu
+    await new OsuCollectorNode()
+      .getCollection<"Collection">({ id: 400 })
+      .catch(() => null)
   );
 })();
