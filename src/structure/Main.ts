@@ -1,5 +1,5 @@
 import {
-  MetadataType,
+  Metadata,
   Me,
   CollectionRoute,
   UserRoute,
@@ -59,12 +59,12 @@ export class OsuCollectorNode {
   /**
    * Get osu!collector's metadata
    * @function getMetadata
-   * @returns {Promise<MetadataType | null>}
+   * @returns {Promise<Metadata | null>}
    */
-  async getMetadata(): Promise<MetadataType | null> {
+  async getMetadata(): Promise<Metadata | null> {
     const path = Routes.metadata;
     const res = await this.request("get", path);
-    return res.status === 200 ? (res.data as MetadataType) : null;
+    return res.status === 200 ? (res.data as Metadata) : null;
   }
 
   /**
