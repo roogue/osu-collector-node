@@ -1,6 +1,6 @@
 {
   "name": "osu-collector-node",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "An osu!Collector api wrapper",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
