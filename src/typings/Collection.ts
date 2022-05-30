@@ -42,13 +42,11 @@ export interface Collection {
   modes: Record<Modes, number>;
 }
 
-export interface Recent {
-  nextPageCursor: number;
+export interface RecentCollection {
+  nextPageCursor: number | null;
   hasMore: boolean;
   collections: Collection[];
 }
-
-export interface Popular extends Recent {}
 
 export enum TimeRange {
   "today",
@@ -61,8 +59,8 @@ export type CollectionRouteType = "collection" | "recent" | "popularv2";
 
 export interface CollectionRoute {
   Collection: Collection;
-  Recent: Recent;
-  PopularV2: Popular;
+  Recent: RecentCollection;
+  PopularV2: RecentCollection;
 }
 
 export interface GetCollectionOptionsBasics {
