@@ -16,7 +16,7 @@ export class OsuCollectorNode {
   /**
    * @function setCookie
    * @param cookie You should able to get from Request Headers after login
-   * @returns {this}
+   * @returns {this} this class
    */
   setCookie(cookie: string): this {
     this.cookie = cookie;
@@ -27,7 +27,7 @@ export class OsuCollectorNode {
    * Get current cookie's user
    * @function getUserMe
    * @param {GetMeOptionsType} options Options for different type of data to be fetched
-   * @returns {Promise<MeRoute[K] | null>}
+   * @returns {Promise<MeRoute[K] | null>} Current logged in user data
    */
   async getUserMe<K extends keyof MeRoute>(
     options?: GetMeOptionsType
@@ -108,7 +108,7 @@ export class OsuCollectorNode {
    * @param {Method} method HTTP method
    * @param {Routes} path Path
    * @param options Data to be sent
-   * @returns
+   * @returns {AxiosResponse} Axios response
    */
   private async request(
     method: Method,
@@ -117,12 +117,12 @@ export class OsuCollectorNode {
       data?: Record<string, string>;
       cookie?: string;
     } = {}
-  ): Promise<AxiosResponse> {
+  ): Promise<AxiosResponse<Record<string, any>>> {
     let body, query;
     const { data, cookie = "" } = options;
     method.toLocaleLowerCase() === "get" ? (query = data) : (body = data);
 
-    const res = await axios({
+    const res = (await axios({
       method,
       url: `${Routes.apiBaseUrl}${path}`,
       data: body,
@@ -130,10 +130,10 @@ export class OsuCollectorNode {
       headers: {
         Cookie: cookie,
       },
-    }).catch((err) => err);
+    }).catch((err) => err)) as AxiosError | AxiosResponse<Record<string, any>>;
 
     if (res instanceof AxiosError) throw new Error(res.message);
 
-    return res as AxiosResponse;
+    return res;
   }
 }
