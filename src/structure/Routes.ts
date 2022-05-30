@@ -1,3 +1,4 @@
+import { MeRouteType } from "src/typings/Me";
 import { UserRouteType, CollectionRouteType } from "../typings";
 
 export class Routes {
@@ -21,16 +22,19 @@ export class Routes {
     return `${this.#endPoint.users}${id}/${option.route ?? ""}`;
   }
 
-  static get me() {
-    return this.#endPoint.me;
+  static me(option: { route?: MeRouteType } = {}) {
+    const { route = "" } = option;
+    return `${this.#endPoint.users}${this.#endPoint.me}${route}`;
   }
 
   static get metadata() {
     return this.#endPoint.metadata;
   }
 
-  static getCollection(options: { id?: number; route?: CollectionRouteType } = {}) {
+  static getCollection(
+    options: { id?: number; route?: CollectionRouteType } = {}
+  ) {
     const { id, route } = options;
-    return `${this.#endPoint.collections}${id ?? route ?? ""}`;
+    return `${this.#endPoint.collections}${id || route || ""}`;
   }
 }
