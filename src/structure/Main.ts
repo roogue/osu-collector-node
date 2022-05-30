@@ -1,6 +1,5 @@
 import {
   Metadata,
-  Me,
   CollectionRoute,
   UserRoute,
   GetUserOptionsType,
@@ -9,9 +8,10 @@ import {
 } from "../typings";
 import { Routes } from "./Routes";
 import axios, { AxiosError, AxiosResponse, Method } from "axios";
+import { GetMeOptionsType, MeRoute } from "src/typings/Me";
 
 export class OsuCollectorNode {
-  cookie: string | null = null;
+  cookie?: string;
 
   /**
    * @function setCookie
@@ -26,20 +26,24 @@ export class OsuCollectorNode {
   /**
    * Get current cookie's user
    * @function getUserMe
-   * @returns {Promise<Me | null>}
+   * @param {GetMeOptionsType} options Options for different type of data to be fetched
+   * @returns {Promise<MeRoute[K] | null>}
    */
-  async getUserMe(): Promise<Me | null> {
+  async getUserMe<K extends keyof MeRoute>(
+    options?: GetMeOptionsType
+  ): Promise<MeRoute[K] | null> {
     if (!this.cookie) throw new Error("Cookie is not set");
-    const path = Routes.me;
+    const { route } = { ...options } as GetMeOptionsType;
+    const path = route ? Routes.me({ route }) : Routes.me();
     const res = await this.request("get", path, { cookie: this.cookie });
-    return res.status === 200 ? (res.data as Me) : null;
+    return res.status === 200 ? (res.data as MeRoute[K]) : null;
   }
 
   /**
    * Get user's data with id
    * @function getUser
    * @param {GetUserOptionsType} options Options for different type of data to be fetched
-   * @returns {Promise<UserType | null>} User list or User data
+   * @returns {Promise<UserRoute[K] | null>} User list or User data
    */
   async getUser<K extends keyof UserRoute>(
     options?: GetUserOptionsType
@@ -52,7 +56,7 @@ export class OsuCollectorNode {
       perPage: perPage.toString(),
       cursor: cursor.toString(),
     };
-    const res = await this.request("get", path, { data });
+    const res = await this.request("get", path, { cookie: this.cookie, data });
     return res.status === 200 ? (res.data as UserRoute[K]) : null;
   }
 
@@ -71,7 +75,7 @@ export class OsuCollectorNode {
    * Get collection's data with id
    * @function getCollection
    * @param {GetCollectionOptionsType} options Options for different type of data to be fetched
-   * @returns {Promise<CollectionType | null>}
+   * @returns {Promise<CollectionRoute[K] | null>}
    */
   async getCollection<K extends keyof CollectionRoute>(
     options?: GetCollectionOptionsType
@@ -95,7 +99,7 @@ export class OsuCollectorNode {
       range: range.toString(),
     };
 
-    const res = await this.request("get", path, { data });
+    const res = await this.request("get", path, { data, cookie: this.cookie });
     return res.status === 200 ? (res.data as CollectionRoute[K]) : null;
   }
 
