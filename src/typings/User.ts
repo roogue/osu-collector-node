@@ -7,12 +7,6 @@ export interface User {
   uploads?: number[];
 }
 
-export interface Me {
-  loggedIn: boolean;
-  user: User | null;
-  paidFeaturesAccess: boolean;
-}
-
 export interface UserList {
   currentPage: number;
   perPage: number;
@@ -21,17 +15,13 @@ export interface UserList {
   users: User[];
 }
 
-export type FavouriteType = Collection[];
-
-export type UploadType = Collection[];
-
 export type UserRouteType = "uploads" | "favourites";
 
 export interface UserRoute {
   Users: UserList;
   User: User;
-  Uploads: UploadType;
-  Favourites: FavouriteType;
+  Uploads: Collection[];
+  Favourites: Collection[];
 }
 
 export interface GetUserOptionsBasics {
