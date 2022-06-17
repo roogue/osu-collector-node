@@ -5,6 +5,7 @@ import {
   GetUserOptionsType,
   GetCollectionOptionsType,
   TimeRange,
+  SortBy,
 } from "../typings";
 import { Routes } from "./Routes";
 import axios, { AxiosError, AxiosResponse, Method } from "axios";
@@ -80,14 +81,18 @@ export class OsuCollectorNode {
   async getCollection<K extends keyof CollectionRoute>(
     options?: GetCollectionOptionsType
   ): Promise<CollectionRoute[K] | null> {
-    const { id, route, params } = { ...options } as GetCollectionOptionsType;
+    const { id, route, params } = {
+      ...options,
+    } as GetCollectionOptionsType;
     if (!id && !route) throw new Error("An Id or a Route is required");
 
     const {
       page = 1,
       perPage = 50,
       cursor = 1,
-      range = TimeRange.alltime,
+      range = TimeRange.AllTime,
+      sortBy = SortBy.Artist,
+      orderBy = "asc",
     } = { ...params };
 
     const path = Routes.getCollection({ id, route });
@@ -96,7 +101,9 @@ export class OsuCollectorNode {
       page: page.toString(),
       perPage: perPage.toString(),
       cursor: cursor.toString(),
-      range: range.toString(),
+      range,
+      sortBy,
+      orderBy,
     };
 
     const res = await this.request("get", path, { data, cookie: this.cookie });

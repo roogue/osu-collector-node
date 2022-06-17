@@ -1,13 +1,8 @@
 import { OsuCollectorNode } from "../index";
 
-const cookie =
-  "";
+const cookie = "";
 
-(async () => {
-  console.log(
-    await new OsuCollectorNode()
-      .setCookie(cookie)
-      .getUserMe<"TwitchSub">({ route: "twitchSub" })
-      .catch(() => null)
-  );
-})();
+new OsuCollectorNode()
+  .getUser<"Uploads">({ id: 2051389, route: "uploads" })
+  .then((data) => console.log(data?.collections[0]))
+  .catch(() => null);
