@@ -12,6 +12,10 @@ npm i osu-collector-node
 yarn add osu-collector-node
 ```
 
+## Documentation
+
+[Documentation](https://roogue.github.io/osu-collector-node/)
+
 ## Example Usage
 
 ```js
@@ -22,18 +26,20 @@ const cookie = "your-cookie";
 const osuCollector = new OsuCollectorNode().setCookie(cookie);
 
 // Fetch data of current logged-in user. 
-const user = osuCollector.getUserMe().then(console.log).catch(console.error);
+osuCollector.getUserMe().then(console.log).catch(console.error);
 
 // Fetch metadata (this does not requires a cookie)
-const metadata = osuCollector.getMetadata().then(console.log).catch(console.error);
+osuCollector.getMetadata().then(console.log).catch(console.error);
+
+// Typescript return type example
+osuCollector.getUser<"Uploads">({ id: 2051389 }).then(console.log).catch(console.error);
 ```
 
 For more information, check the [documentation](https://roogue.github.io/osu-collector-node/)
 
 ## Contributing
 
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks again!
+Typings are written manually by me, there's might be typo, missing or errors in props, once found, please open an issue or pull request for enhancement. Big appreciate.
 
 ## License
 [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
