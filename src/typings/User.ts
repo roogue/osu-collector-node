@@ -1,4 +1,5 @@
 import { Collection, OsuWeb } from "./index";
+import { Tournament } from "./Tournament";
 
 export interface User {
   id: number;
@@ -20,7 +21,7 @@ export type UserRouteType = "uploads" | "favourites";
 export interface UserRoute {
   Users: UserList;
   User: User;
-  Uploads: Collection[];
+  Uploads: { collections: Collection[]; tournaments: Tournament[] };
   Favourites: Collection[];
 }
 
